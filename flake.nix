@@ -49,7 +49,11 @@
             pandas = pkgs.python3.pkgs.pandas;
             default = pkgs.python3.pkgs.pandas;
             update-version = flake-lib.lib.mkUpdateVersion { inherit pkgs source; buildAttr = "pandas"; };
-            update-branches = flake-lib.lib.mkUpdateBranches { inherit pkgs source; pinSchema = "pypi"; };
+            update-branches = flake-lib.lib.mkUpdateBranches {
+              inherit pkgs source;
+              pinSchema = "pypi";
+              excludePrereleases = true;
+            };
           };
         }) // {
       overlays.default = overlay;
