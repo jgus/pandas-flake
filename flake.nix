@@ -19,13 +19,17 @@
       overlay = final: prev: {
         pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
           (pyfinal: pyprev: {
-            pandas = pyprev.pandas.overridePythonAttrs (_: {
+            pandas = pyprev.pandas.overridePythonAttrs (oldAttrs: {
               inherit version;
               doCheck = false;
-              postPatch = ''
-                substituteInPlace pyproject.toml \
-                  --replace-fail "numpy>=2.0" numpy
-              '';
+              postPatch =
+                if final.lib.hasPrefix "2." version then ''
+                  substituteInPlace pyproject.toml \
+                    --replace-fail "numpy>=2.0" numpy
+                '' else if version == "3.0.5" then ''
+                  substituteInPlace pyproject.toml \
+                    --replace-fail "numpy>=2.0.0,!=2.5.0" numpy
+                '' else oldAttrs.postPatch;
               src = pyfinal.fetchPypi { inherit version hash; pname = "pandas"; };
             });
           })
