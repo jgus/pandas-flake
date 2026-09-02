@@ -52,7 +52,6 @@
             update-branches = flake-lib.lib.mkUpdateBranches {
               inherit pkgs source;
               pinSchema = "pypi";
-              excludePrereleases = true;
             };
           };
         }) // {
